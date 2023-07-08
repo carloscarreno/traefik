@@ -27,11 +27,44 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
   name: traefik-dashboard-basicauth
-  namespace: traefik
+  namespace: traefik-system
 
 $ vim 002-middleware.yaml
 Agrega el siguiente contenido:
+
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-basicauth
+  namespace: traefik-system
+
 spec:
   basicAuth:
     secret: traefik-dashboard-auth
+
+$ vim 003-ingressroute.yaml
+Añade el siguiente contenido
+
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik-system
+
+spec:
+  entryPoints:
+    - websecure
+
+  routes:
+    - match: Host(`traefik.PRIMARY_DOMAIN`)
+      kind: Rule
+      middlewares:
+        - name: traefik-dashboard-basicauth
+          namespace: traefik-system
+      services:
+        - name: api@internal
+          kind: TraefikService
+
+
 
