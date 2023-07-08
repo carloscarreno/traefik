@@ -57,7 +57,7 @@ spec:
     - websecure
 
   routes:
-    - match: Host(`traefik.PRIMARY_DOMAIN`)
+    - match: Host(`worker1.dev.indeci.gob.pe`)
       kind: Rule
       middlewares:
         - name: traefik-dashboard-basicauth
